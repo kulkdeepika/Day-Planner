@@ -1,35 +1,12 @@
 
-
-// var btn = document.getElementById("btn");
-
-// var ref = btn.parentElement.parentElement.getAttribute("data-index")
-
-// var x = "\"one\"";
-
-// var ele = $('[data-index = ' + `${x}` + ']');
-
-// console.log(ele[0].firstElementChild.innerHTML);
-// console.log($("p")[0].innerHTML);
-// console.log(btn.parentElement.parentElement.getAttribute("data-index"));
-
-// var plan = "";
-
-// var area = document.getElementById("textarea");
-
-// area.addEventListener("input", () => {plan = area.value;});
-// btn.addEventListener("click", () => {console.log(plan);});
-
-
-// var area1 = document.getElementById("textarea1");
-
-////////////////////////////////////////////////////////////////////////////////
-
-// var planner = $('.saveBtn');
-// var temp="";
-
-// planner.addEventListener("click" , saveData);
-
 $(document).ready(function () {
+
+//global declarations
+    var plan;
+    var timeBlock;
+    const times = ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"];
+
+//function definitions
 
     $(window).on("load", function() {console.log("handler hit");
                                     var currentDayDisplay = $("#currentDay");
@@ -46,44 +23,79 @@ $(document).ready(function () {
                                     {
                                         $(`[data-time="${plannerData[i].time}"]`).val(plannerData[i].currentPlan);
                                     }
-                                  /////////////////////////////////////////////////////////////////////////////////
                                   
-                                    var currHour = parseInt(moment().format("H"));
-                                    console.log("current Hour is " + currHour);
-                                    console.log(typeof currHour);
-
-                                    var dt = moment("9AM", ["hA"]).format("HH");
-
-                                    console.log(dt);
-
-                                    // console.log($(`[data-time="${currHour}"]`))//.attr("class", "future");
-
-                                    // $(`[data-time="${currHour}"]`).each(function(){
-                                    //     console.log("2times");
-                                    //     if(typeof $(this).attr("class") == "undefined")
-                                    //     {
-                                    //         $(this).attr("class", "future");
-                                    //     }
-
-
-                                    // })
-
+                                    updateColors();         
 
                                 });
 
-var plan;
-var timeBlock;
-$('.saveBtn').click(saveData);
+    function updateColors(){
+        // var times = ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"];
+                                    
+        //var currHour = parseInt(moment().format("H"));
 
-initializeLocalStorage();
+        var currHour = (new Date).getHours();
 
-function initializeLocalStorage(){
-    //localStorage.removeItem("dataKey");
-    if(!("dataKey" in localStorage))
-    { 
-        var plannerData = [{time : "10AM", currentPlan: ""},{time : "11AM", currentPlan: ""}];
-        localStorage.setItem("dataKey", JSON.stringify(plannerData));
-    }
+        ////////////////////////////////////////////////////////////////
+        console.log("current Hour is " + currHour);
+
+        var minmo = moment().format("mm");
+
+        console.log("Moment minute change " + minmo);
+        var min = (new Date).getMinutes();
+        console.log("type of the minute is  " , typeof min);
+        console.log((new Date).getMinutes());
+        console.log("type of currHour " + typeof currHour);
+        //////////////////////////////////////////////////////////////
+
+        for(let i=0;i<times.length;i++)
+        {
+            var dt = parseInt(moment(times[i], ["hA"]).format("HH"));
+            console.log(dt);
+            console.log("type of dt " + typeof dt);
+            
+        if(dt < currHour)
+        {
+                $(`[data-time="${times[i]}"]`).each(function(){
+                    console.log("2times");
+                    if(typeof $(this).attr("class") == "undefined")
+                    {
+                        $(this).attr("class", "past");
+                    }
+
+                })
+        }
+        else if(dt > currHour){
+                $(`[data-time="${times[i]}"]`).each(function(){
+                console.log("2times");
+                if(typeof $(this).attr("class") == "undefined")
+                {
+                    $(this).attr("class", "future");
+                }
+
+                })
+        }
+        else{
+                $(`[data-time="${times[i]}"]`).each(function(){
+                console.log("2times");
+                if(typeof $(this).attr("class") == "undefined")
+                {
+                    $(this).attr("class", "present");
+                }
+
+                })
+        }
+
+        }
+}
+
+    function initializeLocalStorage(){
+        // localStorage.removeItem("dataKey");
+        if(!("dataKey" in localStorage))
+        { 
+            var plannerData = [{time : "9AM", currentPlan: ""},{time : "10AM", currentPlan: ""},{time : "11AM", currentPlan: ""},{time : "12PM", currentPlan: ""},{time : "1PM", currentPlan: ""},{time : "2PM", currentPlan: ""},{time : "3PM", currentPlan: ""},{time : "4PM", currentPlan: ""},{time : "5PM", currentPlan: ""}];
+
+            localStorage.setItem("dataKey", JSON.stringify(plannerData));
+        }
 }
 
 function saveData(){
@@ -111,14 +123,15 @@ function saveData(){
 
         // plannerData.push({time : timeBlock , currentPlan : plan});
         
-
         localStorage.setItem("dataKey", JSON.stringify(plannerData));
 
         console.log(JSON.parse(localStorage.getItem("dataKey")));
-
-
-
 }
+
+//function calls
+var downLoadTimer = setInterval(updateColors , 15000);
+initializeLocalStorage();
+$('.saveBtn').click(saveData);
 
 });
 
