@@ -47,6 +47,7 @@ $(document).ready(function () {
         console.log("type of currHour " + typeof currHour);
         //////////////////////////////////////////////////////////////
 
+        
         for(let i=0;i<times.length;i++)
         {
             var dt = parseInt(moment(times[i], ["hA"]).format("HH"));
@@ -57,9 +58,13 @@ $(document).ready(function () {
         {
                 $(`[data-time="${times[i]}"]`).each(function(){
                     console.log("2times");
-                    if(typeof $(this).attr("class") == "undefined")
+                    
+                    console.log($(this).is("button"));
+                    // if(typeof $(this).attr("class") == "undefined")
+                    if(!($(this).is("button")))
                     {
                         $(this).attr("class", "past");
+                        
                     }
 
                 })
@@ -67,7 +72,8 @@ $(document).ready(function () {
         else if(dt > currHour){
                 $(`[data-time="${times[i]}"]`).each(function(){
                 console.log("2times");
-                if(typeof $(this).attr("class") == "undefined")
+                //if(typeof $(this).attr("class") == "undefined")
+                if(!($(this).is("button")))
                 {
                     $(this).attr("class", "future");
                 }
@@ -77,7 +83,8 @@ $(document).ready(function () {
         else{
                 $(`[data-time="${times[i]}"]`).each(function(){
                 console.log("2times");
-                if(typeof $(this).attr("class") == "undefined")
+                //if(typeof $(this).attr("class") == "undefined")
+                if(!($(this).is("button")))
                 {
                     $(this).attr("class", "present");
                 }
@@ -133,6 +140,6 @@ var downLoadTimer = setInterval(updateColors , 15000);
 initializeLocalStorage();
 $('.saveBtn').click(saveData);
 
-});
+});//end of document.ready
 
 
