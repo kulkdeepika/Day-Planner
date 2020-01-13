@@ -59,11 +59,11 @@ function generateHtml(){
 
 function initializeLocalStorage(){
     // localStorage.removeItem("dataKey");
-    if(!("dataKey" in localStorage))
+    if(!("plannerDataKey" in localStorage))
     { 
         var plannerData = [{time : "9AM", currentPlan: ""},{time : "10AM", currentPlan: ""},{time : "11AM", currentPlan: ""},{time : "12PM", currentPlan: ""},{time : "1PM", currentPlan: ""},{time : "2PM", currentPlan: ""},{time : "3PM", currentPlan: ""},{time : "4PM", currentPlan: ""},{time : "5PM", currentPlan: ""}];
 
-        localStorage.setItem("dataKey", JSON.stringify(plannerData));
+        localStorage.setItem("plannerDataKey", JSON.stringify(plannerData));
     }
 }
 
@@ -72,7 +72,7 @@ function onLoad(){
     var currentDayDisplay = $("#currentDay");
     currentDayDisplay.text(moment().format("dddd, MMMM Do YYYY"));
     
-    plannerData = JSON.parse(localStorage.getItem("dataKey"));
+    plannerData = JSON.parse(localStorage.getItem("plannerDataKey"));
                    
     $(`[data-time="${plannerData[0].time}"]`).val(plannerData[0].currentPlan);
 
@@ -139,7 +139,7 @@ function saveData(){
 
         timeBlock = $(this).attr("data-time");
 
-        var plannerData = JSON.parse(localStorage.getItem("dataKey"));
+        var plannerData = JSON.parse(localStorage.getItem("plannerDataKey"));
 
         for(i=0;i<plannerData.length;i++)
         {
@@ -150,7 +150,7 @@ function saveData(){
             
         }
         
-        localStorage.setItem("dataKey", JSON.stringify(plannerData));
+        localStorage.setItem("plannerDataKey", JSON.stringify(plannerData));
 }
 
 //function calls
