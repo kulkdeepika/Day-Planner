@@ -7,7 +7,8 @@ $(document).ready(function () {
     const times = ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"];
     
 //function definitions
-    
+
+//this function dynamically generates all the rows and columns
 function generateHtml(){
 
     for(let i=0; i<times.length; i++)
@@ -53,6 +54,20 @@ function generateHtml(){
     }
 }
 
+//this function checks if the localstorage key exists; if not, it initializes the local storage appropriately.
+//it is called after the html is generated.
+
+function initializeLocalStorage(){
+    // localStorage.removeItem("dataKey");
+    if(!("dataKey" in localStorage))
+    { 
+        var plannerData = [{time : "9AM", currentPlan: ""},{time : "10AM", currentPlan: ""},{time : "11AM", currentPlan: ""},{time : "12PM", currentPlan: ""},{time : "1PM", currentPlan: ""},{time : "2PM", currentPlan: ""},{time : "3PM", currentPlan: ""},{time : "4PM", currentPlan: ""},{time : "5PM", currentPlan: ""}];
+
+        localStorage.setItem("dataKey", JSON.stringify(plannerData));
+    }
+}
+
+//this function loads the current day and retrives the data from the local storage
 function onLoad(){
     var currentDayDisplay = $("#currentDay");
     currentDayDisplay.text(moment().format("dddd, MMMM Do YYYY"));
@@ -68,7 +83,8 @@ function onLoad(){
                                   
     updateColors(); 
 }
-                                
+
+//this function is called at load and every 15 secs to see if the hour and changed and change the colors accordingly.                                
 function updateColors(){
                                     
     var currHour = (new Date).getHours();
@@ -115,16 +131,8 @@ function updateColors(){
     }
 }
 
-    function initializeLocalStorage(){
-        // localStorage.removeItem("dataKey");
-        if(!("dataKey" in localStorage))
-        { 
-            var plannerData = [{time : "9AM", currentPlan: ""},{time : "10AM", currentPlan: ""},{time : "11AM", currentPlan: ""},{time : "12PM", currentPlan: ""},{time : "1PM", currentPlan: ""},{time : "2PM", currentPlan: ""},{time : "3PM", currentPlan: ""},{time : "4PM", currentPlan: ""},{time : "5PM", currentPlan: ""}];
-
-            localStorage.setItem("dataKey", JSON.stringify(plannerData));
-        }
-}
-
+    
+//this function is called on a click event on the save button. stores the text in the local storage
 function saveData(){
     
         plan = $(`[data-time="${event.target.dataset.time}"]`).val();

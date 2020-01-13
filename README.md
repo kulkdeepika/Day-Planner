@@ -12,3 +12,6 @@ The colors change automatically(after 15 secs of hour change), to reflect the cu
 ## Credits
 Moment.js library was used to make time related operations easier.
 https://stackoverflow.com was used as a reference to try to resolve some issues encountered.
+
+## potential future improvements
+Instead of monitoring for hour change every 15 secs, a calculation can be made to get the amount of time remaining for the hour to change next, after the application is loaded, and the function can be called after that amount of time.
