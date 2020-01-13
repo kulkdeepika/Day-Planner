@@ -5,94 +5,114 @@ $(document).ready(function () {
     var plan;
     var timeBlock;
     const times = ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"];
-
+    
 //function definitions
+    
+function generateHtml(){
 
-    $(window).on("load", function() {console.log("handler hit");
-                                    var currentDayDisplay = $("#currentDay");
+    for(let i=0; i<times.length; i++)
+    {
+        let oneRow = $("<div>");
+        oneRow.addClass("row");
+    
+        let firstCol = $("<div>");
+        firstCol.addClass("col-1");
+        firstCol.addClass("hour");
 
-                                    currentDayDisplay.text(moment().format("dddd, MMMM Do YYYY"));
-                                    plannerData = JSON.parse(localStorage.getItem("dataKey"));
+        let timeHolder = $("<p>");
+        timeHolder.text(times[i]);
+        timeHolder.css("margin-top", "40%")
+       
+        firstCol.append(timeHolder);
 
-                                    console.log(plannerData);
-                                    console.log(plannerData[0].time);
-                                    $(`[data-time="${plannerData[0].time}"]`).val(plannerData[0].currentPlan);
-                                    console.log($(`[data-time="${plannerData[0].time}"]`).val());
+        let secCol = $("<div>");
+        secCol.addClass("col-10");
 
-                                    for(let i=0; i<plannerData.length; i++)
-                                    {
-                                        $(`[data-time="${plannerData[i].time}"]`).val(plannerData[i].currentPlan);
-                                    }
+        let planText = $("<textarea>");
+        planText.attr("data-time" , times[i]);
+        planText.css("height", "80%")
+
+        secCol.append(planText);
+
+        let thirdCol = $("<div>");
+        thirdCol.addClass("col-1");
+
+        let svBtn = $("<button>");
+        svBtn.addClass("saveBtn");
+        svBtn.attr("data-time", times[i]);
+        svBtn.text("SAVE");
+
+        thirdCol.append(svBtn);
+
+        oneRow.append(firstCol);
+        oneRow.append(secCol);
+        oneRow.append(thirdCol);
+
+        $(".container").append(oneRow);
+
+    }
+}
+
+function onLoad(){
+    var currentDayDisplay = $("#currentDay");
+    currentDayDisplay.text(moment().format("dddd, MMMM Do YYYY"));
+    
+    plannerData = JSON.parse(localStorage.getItem("dataKey"));
+                   
+    $(`[data-time="${plannerData[0].time}"]`).val(plannerData[0].currentPlan);
+
+    for(let i=0; i<plannerData.length; i++)
+    {
+        $(`[data-time="${plannerData[i].time}"]`).val(plannerData[i].currentPlan);
+    }
                                   
-                                    updateColors();         
-
-                                });
-
-    function updateColors(){
-        // var times = ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"];
+    updateColors(); 
+}
+                                
+function updateColors(){
                                     
-        //var currHour = parseInt(moment().format("H"));
-
-        var currHour = (new Date).getHours();
-
-        ////////////////////////////////////////////////////////////////
-        console.log("current Hour is " + currHour);
-
-        var minmo = moment().format("mm");
-
-        console.log("Moment minute change " + minmo);
-        var min = (new Date).getMinutes();
-        console.log("type of the minute is  " , typeof min);
-        console.log((new Date).getMinutes());
-        console.log("type of currHour " + typeof currHour);
-        //////////////////////////////////////////////////////////////
-
+    var currHour = (new Date).getHours();
         
-        for(let i=0;i<times.length;i++)
-        {
-            var dt = parseInt(moment(times[i], ["hA"]).format("HH"));
-            console.log(dt);
-            console.log("type of dt " + typeof dt);
+    for(let i=0;i<times.length;i++)
+    {
+        var dt = parseInt(moment(times[i], ["hA"]).format("HH"));
             
         if(dt < currHour)
         {
-                $(`[data-time="${times[i]}"]`).each(function(){
-                    console.log("2times");
-                    
-                    console.log($(this).is("button"));
-                    // if(typeof $(this).attr("class") == "undefined")
-                    if(!($(this).is("button")))
-                    {
-                        $(this).attr("class", "past");
-                        
-                    }
-
-                })
-        }
-        else if(dt > currHour){
-                $(`[data-time="${times[i]}"]`).each(function(){
-                console.log("2times");
-                //if(typeof $(this).attr("class") == "undefined")
+            $(`[data-time="${times[i]}"]`).each(function(){
+                                 
                 if(!($(this).is("button")))
                 {
-                    $(this).attr("class", "future");
+                    $(this).attr("class", "past");
+                        
                 }
 
-                })
+            })
         }
-        else{
-                $(`[data-time="${times[i]}"]`).each(function(){
-                console.log("2times");
-                //if(typeof $(this).attr("class") == "undefined")
+        else if(dt > currHour)
+        {
+            $(`[data-time="${times[i]}"]`).each(function(){
+                
+                if(!($(this).is("button")))
+                {
+                        $(this).attr("class", "future");
+                }
+
+            })
+        }
+        else
+        {
+            $(`[data-time="${times[i]}"]`).each(function(){
+                
                 if(!($(this).is("button")))
                 {
                     $(this).attr("class", "present");
                 }
 
-                })
+            })
         }
 
-        }
+    }
 }
 
     function initializeLocalStorage(){
@@ -111,12 +131,6 @@ function saveData(){
 
         timeBlock = $(this).attr("data-time");
 
-        console.log(plan);
-        console.log(timeBlock);
-
-        console.log("hit");
-        console.log(event.target.dataset.time);
-
         var plannerData = JSON.parse(localStorage.getItem("dataKey"));
 
         for(i=0;i<plannerData.length;i++)
@@ -127,17 +141,15 @@ function saveData(){
             }
             
         }
-
-        // plannerData.push({time : timeBlock , currentPlan : plan});
         
         localStorage.setItem("dataKey", JSON.stringify(plannerData));
-
-        console.log(JSON.parse(localStorage.getItem("dataKey")));
 }
 
 //function calls
-var downLoadTimer = setInterval(updateColors , 15000);
+generateHtml();
 initializeLocalStorage();
+onLoad();
+var downLoadTimer = setInterval(updateColors , 15000);
 $('.saveBtn').click(saveData);
 
 });//end of document.ready
