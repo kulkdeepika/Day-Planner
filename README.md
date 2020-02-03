@@ -1,4 +1,6 @@
 # Day-Planner
+@ https://kulkdeepika.github.io/Day-Planner
+
 Schedule important events in the business hours.
 
 ## Usage
